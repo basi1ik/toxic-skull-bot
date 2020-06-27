@@ -1,0 +1,25 @@
+{
+  "name": "toxic-skull-bot",
+  "version": "1.0.0",
+  "description": "discord bot",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "mongoose": "^5.9.20"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/basi1ik/toxic-skull-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/basi1ik/toxic-skull-bot/issues"
+  },
+  "homepage": "https://github.com/basi1ik/toxic-skull-bot#readme"
+}
