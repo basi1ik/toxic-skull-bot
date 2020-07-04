@@ -1,14 +1,17 @@
 const Discord = require("discord.js");
+const mongoose = require('mongoose')
+
 const config = require('./config');
 const client = new Discord.Client();
 
-const {setStatus} = require('./utils');
-//setStatus();
-
 client.commands = {};
-
-loadEvents();
-loadCommands();
+mongoose.connect(config.db,  { useNewUrlParser: true, useCreateIndex: true })
+        .then(con => {
+            console.log('DB connected')
+            loadEvents();
+            loadCommands();
+            login()
+        })
 
 function loadEvents() {
   console.log('=========== loading events =============')
@@ -38,7 +41,9 @@ function loadCommands() {
   console.log('=========================================')
 }
 
-client.login(config.token);
+function login() {
+   client.login(config.token); 
+}
 
 // client.on('raw', async event => {
 //   console.log(event);

@@ -1,9 +1,11 @@
-var client = require('discord.js');
+var Discord = require('discord.js');
 var config = require('./config')
 var fs = require("fs");
 var {
   getGameRoleIdByChannelId
 } = require('./db')
+
+var embedMessage = new Discord.MessageEmbed()
 
 function _getMoscowTime() {
   var now = new Date()
@@ -138,11 +140,22 @@ function isDiscordInvite(userInput)
     return true; 
   
 }
+function sendMessageEmbed(text) {
+  var embedMessage = new Discord.MessageEmbed()
+  
+  embedMessage = {
+    color: 0x0099ff,
+		description: text,
+  }  
+  return embedMessage         
+  
+}
 
 module.exports = {
   time,
   sortingGameChannels,  
   setStatus,
   setGameRole,
-  checkUrl
+  checkUrl,
+  sendMessageEmbed
 };

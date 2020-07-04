@@ -1,5 +1,5 @@
 var config = require('../config')
-var {checkUrl} = require('../utils')
+var {checkUrl, sendMessageEmbed} = require('../utils')
 
 const Discord = require('discord.js');
 var exampleEmbed = new Discord.MessageEmbed()
@@ -29,14 +29,17 @@ module.exports = async function (client, message) {
             }
         } 
         return        
-    }    
+    }       
+ 
+    message.channel.send('sfsdfsdfsdfs')
     
-    checkUrl(message.channel.id, message);
+   // message.channel.send(sendMessageEmbed('text'))
+    
 
-    if ((message.content.startsWith('{'))&&(message.content.endsWith('}'))){
-        console.log(exampleEmbed );
-        message.channel.send({ embed: message.content })
-    }
+    // if ((message.content.startsWith('{'))&&(message.content.endsWith('}'))){
+    //     console.log(exampleEmbed );
+    //     message.channel.send({ embed: message.content })
+    // }
 }
 
 
