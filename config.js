@@ -3,17 +3,17 @@ module.exports = {
     token: process.env.TOKEN,
     db: process.env.DB,
     prefix: '!',    
-    guild: '725061419103551560',
+    guild: process.env.GUILD,
 
     channels: {
-        commands: '725061419703468034',
+        commands: process.env.COMMANDS,
         links: '',
         gamesParent:'',
         welcome: '',
     },
 
     roles: {
-        admin: '727762646916399137',
+        admin: process.env.ROLE_ADMIN,
         moderator: '',
         eventHost: '',
     }
