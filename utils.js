@@ -89,22 +89,6 @@ async function setGameRole(channel, member) {
     } else {
       console.log(`you have [${gameRole.name}] already!`)
     }
-
-  // var gameRoles = JSON.parse(fs.readFileSync("gameRoles.json"));
-
-  // for (let i = 0; i < gameRoles.length; i++) {
-  //   if (channel == gameRoles[i].ChannelID) {
-  //     let isRole = member.roles.cache.some(role => role.id === gameRoles[i].RoleID);
-  //     const role = member.guild.roles.cache.get(gameRoles[i].RoleID);
-      
-  //     if (!isRole) {
-  //       member.roles.add(role)
-  //         .then(console.log(`${time} | The role ${role.name} is added.`));
-  //     } else {
-  //       console.log(`У вас уже есть роль [${role.name}]!`)
-  //     }
-  //   }
-  // }
 }
 
 function checkUrl(channelID, message) {
@@ -126,15 +110,33 @@ function checkUrl(channelID, message) {
             });
         }
     }
+  if (isDiscordInvite(message.content) == true) {
+    console.log('это приглашение на другой сервер');
+    message.delete({
+      timeout: 1000,
+      reason: 'It had to be done.'
+    })
+  } 
 }
 
 function isUrlValid(userInput) {
   var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-  //   /(http(s)?:\/\/.)?discord.gg\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g - discord's link 
+  //   /(http(s)?:\/\/.)?discord.gg\b([-a-zA-Z0-9]{0,6})/g - discord's link 
   if (res == null)
       return false;
   else
       return true;
+}
+
+function isDiscordInvite(userInput) 
+{
+  var res = userInput.match(/(http(s)?:\/\/.)?discord.gg\b([-a-zA-Z0-9]{0,6})/g);
+ 
+  if (res == null)
+    return false;
+  else 
+    return true; 
+  
 }
 
 module.exports = {
