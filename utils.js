@@ -1,0 +1,146 @@
+var client = require('discord.js');
+var config = require('./config')
+var fs = require("fs");
+var {
+  getGameRoleIdByChannelId
+} = require('./db')
+
+function _getMoscowTime() {
+  var now = new Date()
+  return {
+    hours: (now.getUTCHours() + 3) % 24, // GMT+3
+    minutes: now.getMinutes()
+  }
+}
+
+const _prependZero = val => ("0" + val).slice(-2)
+
+let {
+  hours,
+  minutes
+} = _getMoscowTime()
+hours = _prependZero(hours)
+minutes = _prependZero(minutes)
+let time = `${hours}:${minutes}`
+
+function sortingGameChannels(guild) {
+
+  var listMembers = [];
+  guild.channels.cache.forEach((channel) => {
+    if ((channel.type == 'voice') && (channel.parentID == config.channels.gamesParent)) {
+      let {
+        nMembers,
+        uMembers
+      } = getNumberOfMember(channel);
+
+      var channelsByMember = {
+        'idChannel': channel.id,
+        'nameChannel': channel.name,
+        'positionChannel': channel.position,
+        'nMembers': nMembers,
+      };
+      listMembers.push(channelsByMember);
+    }
+  });
+
+  var orderedMember = orderByCountMember(listMembers);
+
+  for (var i = 0; i < orderedMember.length; i++) {   
+    var channel = guild.channels.cache.get(orderedMember[i].idChannel);
+    channel.setPosition(i)
+      .then(newChannel => console.log(`Channel's ${newChannel.name} new position is ${newChannel.position}`))
+      .catch(console.error);
+  }
+}
+
+function getNumberOfMember(channel) {
+  let nMembers = 0;
+  let uMembers = [];
+  channel.members.forEach(member => {
+    uMembers.push(member.user.username);    
+    nMembers++;
+  });
+  return {
+    nMembers,
+    uMembers
+  };
+}
+
+function orderByCountMember(channelsByMember) {
+  channelsByMember.sort(function (a, b) {
+    return b.nMembers - a.nMembers
+  });
+  return channelsByMember;
+}
+
+function setStatus(client) {
+  client.user.setActivity(client.guild.name, { type: 'WATCHING' });  
+}
+
+async function setGameRole(channel, member) {
+
+    const gameRoleId = await getGameRoleIdByChannelId(channel)
+    let isGameRole = member.roles.cache.some(role => role.id === gameRoleId);
+    const gameRole = member.guild.roles.cache.get(gameRoleId);
+
+    if (!isGameRole) {
+      member.roles.add(gameRole)
+        .then(console.log(`${time} | The role ${gameRole.name} is added.`));
+    } else {
+      console.log(`you have [${gameRole.name}] already!`)
+    }
+
+  // var gameRoles = JSON.parse(fs.readFileSync("gameRoles.json"));
+
+  // for (let i = 0; i < gameRoles.length; i++) {
+  //   if (channel == gameRoles[i].ChannelID) {
+  //     let isRole = member.roles.cache.some(role => role.id === gameRoles[i].RoleID);
+  //     const role = member.guild.roles.cache.get(gameRoles[i].RoleID);
+      
+  //     if (!isRole) {
+  //       member.roles.add(role)
+  //         .then(console.log(`${time} | The role ${role.name} is added.`));
+  //     } else {
+  //       console.log(`У вас уже есть роль [${role.name}]!`)
+  //     }
+  //   }
+  // }
+}
+
+function checkUrl(channelID, message) {
+
+  if (channelID !== config.channels.links) {
+        if (isUrlValid(message.content) == true) {
+            console.log('это ссылка');
+            message.delete({
+                timeout: 1000,
+                reason: 'It had to be done.'
+            });
+        }
+    } else {
+        if (isUrlValid(message.content) == false) {
+            console.log('это ссылка');
+            message.delete({
+                timeout: 1000,
+                reason: 'It had to be done.'
+            });
+        }
+    }
+}
+
+function isUrlValid(userInput) {
+  var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+  //   /(http(s)?:\/\/.)?discord.gg\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g - discord's link 
+  if (res == null)
+      return false;
+  else
+      return true;
+}
+
+module.exports = {
+  time,
+  sortingGameChannels,  
+  setStatus,
+  setGameRole,
+  checkUrl
+};
