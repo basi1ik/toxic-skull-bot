@@ -8,7 +8,7 @@ module.exports = {
     channels: {
         commands: process.env.COMMANDS,
         links: process.env.LINKS,
-        gamesParent:'',
+        gamesParent:process.env.GAMES_PARENT,
         welcome: '',
     },
 

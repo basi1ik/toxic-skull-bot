@@ -45,9 +45,5 @@ function login() {
    client.login(config.token); 
 }
 
-// client.on('raw', async event => {
-//   console.log(event);
-// })
-
 
 
