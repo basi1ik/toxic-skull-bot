@@ -11,5 +11,5 @@ module.exports = async function (client) {
     sortingGameChannels(client.guild);    
   }   
  
-  setInterval(intervalFunc, 5000);
+  //setInterval(intervalFunc, 5000);
 }

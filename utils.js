@@ -5,8 +5,6 @@ var {
   getGameRoleIdByChannelId
 } = require('./db')
 
-var embedMessage = new Discord.MessageEmbed()
-
 function _getMoscowTime() {
   var now = new Date()
   return {
@@ -41,7 +39,10 @@ function sortingGameChannels(guild) {
         'positionChannel': channel.position,
         'nMembers': nMembers,
       };
+      if (nMembers > 0){
+         console.log(channel.name + '|' + nMembers + '|' + channel.position)
       listMembers.push(channelsByMember);
+      }     
     }
   });
 

@@ -1,8 +1,9 @@
 var config = require('../config')
-let {time, setGameRole} = require('../utils')
+let {time, setGameRole,sortingGameChannels} = require('../utils')
 
 module.exports = async function (client, oldMember, newMember) {
 
+  sortingGameChannels(client.guild);
   // Here I'm storing the IDs of their voice channels, if available
   let oldChannel = oldMember.channel ? oldMember.channelID : null;
   let newChannel = newMember.channel ? newMember.channelID : null;
